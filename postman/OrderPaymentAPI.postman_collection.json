@@ -1,0 +1,719 @@
+{
+  "info": {
+    "name": "Order & Payment Management API - Complete Documentation",
+    "description": "# Order & Payment Management API\n\n## Overview\nComplete API documentation for the Laravel-based Order and Payment Management system.\n\n## Features\n- JWT Authentication\n- Order Management (CRUD)\n- Payment Processing (Multiple Gateways)\n- Extensible Architecture\n\n## Base URL\n`http://localhost:8000/api`\n\n## Authentication\nAll protected endpoints require JWT token in Authorization header:\n```\nAuthorization: Bearer {your_jwt_token}\n```\n\n## Available Payment Gateways\n- `credit_card` - Credit Card Processing\n- `paypal` - PayPal Integration\n- `stripe` - Stripe Payment Gateway\n\n## Status Codes\n- `200` - Success (GET, PUT, PATCH)\n- `201` - Created (POST)\n- `204` - No Content (DELETE)\n- `401` - Unauthorized\n- `403` - Forbidden\n- `404` - Not Found\n- `422` - Validation Error\n- `500` - Server Error",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "description": "User registration, login, and token management endpoints",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('jwt_token', response.access_token);",
+                  "    pm.collectionVariables.set('jwt_token', response.access_token);",
+                  "    console.log('Token saved:', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"password_confirmation\": \"SecurePassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account.\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1Qi...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}\n```"
+          },
+          "response": [
+            {
+              "name": "Success - User Registered",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}"
+            },
+            {
+              "name": "Error - Validation Failed",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"message\": \"The email has already been taken. (and 1 more error)\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"],\n    \"password\": [\"The password confirmation does not match.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('jwt_token', response.access_token);",
+                  "    pm.collectionVariables.set('jwt_token', response.access_token);",
+                  "    console.log('Login successful! Token saved.');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login with existing credentials.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Login successful\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1Qi...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The provided credentials are incorrect.\",\n  \"errors\": {\n    \"email\": [\"The provided credentials are incorrect.\"]\n  }\n}\n```"
+          },
+          "response": [
+            {
+              "name": "Success - Login",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Login successful\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3MDY2MjQwMDAsImV4cCI6MTcwNjYyNzYwMCwibmJmIjoxNzA2NjI0MDAwLCJqdGkiOiJhYmMxMjM0NTYiLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.xyz789\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}"
+            },
+            {
+              "name": "Error - Invalid Credentials",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"message\": \"The provided credentials are incorrect.\",\n  \"errors\": {\n    \"email\": [\"The provided credentials are incorrect.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get authenticated user information.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"email_verified_at\": null,\n    \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Refresh JWT token before expiration.\n\n**Success Response (200):**\n```json\n{\n  \"access_token\": \"new_token_here\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout and invalidate current token.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Successfully logged out\"\n}\n```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Orders",
+      "description": "Order management endpoints - Create, read, update, delete orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('order_id', response.data.id);",
+                  "    console.log('Order created with ID:', response.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_name\": \"MacBook Pro 16-inch\",\n      \"quantity\": 1,\n      \"price\": 2499.99\n    },\n    {\n      \"product_name\": \"Magic Mouse\",\n      \"quantity\": 2,\n      \"price\": 79.99\n    },\n    {\n      \"product_name\": \"USB-C Cable\",\n      \"quantity\": 3,\n      \"price\": 19.99\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            },
+            "description": "Create a new order with items.\n\n**Request Body:**\n- `items` (array, required): Array of order items\n  - `product_name` (string, required, max:255)\n  - `quantity` (integer, required, min:1, max:1000)\n  - `price` (decimal, required, min:0.01, max:999999.99)\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"Order created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"status\": \"pending\",\n    \"total_amount\": \"2719.94\",\n    \"items_count\": 3,\n    \"payments_count\": 0,\n    \"created_at\": \"2025-01-30T10:00:00.000000Z\",\n    \"items\": [...]\n  }\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The items field is required. (and 1 more error)\",\n  \"errors\": {\n    \"items\": [\"The items field is required.\"],\n    \"items.0.price\": [\"The price must be at least 0.01.\"]\n  }\n}\n```"
+          },
+          "response": [
+            {
+              "name": "Success - Order Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"Order created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"status\": \"pending\",\n    \"total_amount\": \"2719.94\",\n    \"items_count\": 3,\n    \"payments_count\": 0,\n    \"created_at\": \"2025-01-30T10:00:00.000000Z\",\n    \"updated_at\": \"2025-01-30T10:00:00.000000Z\",\n    \"items\": [\n      {\n        \"id\": 1,\n        \"product_name\": \"MacBook Pro 16-inch\",\n        \"quantity\": 1,\n        \"price\": \"2499.99\",\n        \"subtotal\": 2499.99,\n        \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n      },\n      {\n        \"id\": 2,\n        \"product_name\": \"Magic Mouse\",\n        \"quantity\": 2,\n        \"price\": \"79.99\",\n        \"subtotal\": 159.98,\n        \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n      },\n      {\n        \"id\": 3,\n        \"product_name\": \"USB-C Cable\",\n        \"quantity\": 3,\n        \"price\": \"19.99\",\n        \"subtotal\": 59.97,\n        \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n      }\n    ]\n  }\n}"
+            },
+            {
+              "name": "Error - Validation Failed",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"message\": \"The items field is required.\",\n  \"errors\": {\n    \"items\": [\"The items field is required.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders?per_page=15&status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "Items per page (default: 15)"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "Filter by status: pending, confirmed, cancelled",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of orders for authenticated user.\n\n**Query Parameters:**\n- `per_page` (integer, optional): Items per page (default: 15)\n- `status` (string, optional): Filter by status (pending, confirmed, cancelled)\n\n**Success Response (200):**\n```json\n{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"status\": \"pending\",\n      \"total_amount\": \"2719.94\",\n      \"items_count\": 3,\n      \"payments_count\": 0,\n      \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n    }\n  ],\n  \"links\": {...},\n  \"meta\": {...}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Get detailed information about a specific order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"status\": \"pending\",\n    \"total_amount\": \"2719.94\",\n    \"items\": [...],\n    \"payments\": [...]\n  }\n}\n```\n\n**Error Response (403):**\n```json\n{\n  \"message\": \"This action is unauthorized.\"\n}\n```\n\n**Error Response (404):**\n```json\n{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Update order status or items.\n\n**Request Body:**\n- `status` (string, optional): pending, confirmed, cancelled\n- `items` (array, optional): Updated items array\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order updated successfully\",\n  \"data\": {...}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "confirm"]
+            },
+            "description": "Confirm an order (required before payment).\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order confirmed successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"status\": \"confirmed\",\n    ...\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "cancel"]
+            },
+            "description": "Cancel an order.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order cancelled successfully\",\n  \"data\": {...}\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Delete an order (only if no payments exist).\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order deleted successfully\"\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"Cannot delete order with associated payments\"\n}\n```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Payments",
+      "description": "Payment processing and management endpoints",
+      "item": [
+        {
+          "name": "Process Payment - Credit Card",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('payment_id', response.data.id);",
+                  "    console.log('Payment processed with ID:', response.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4111111111111111\",\n  \"card_expiry\": \"12/25\",\n  \"card_cvv\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "payments"]
+            },
+            "description": "Process credit card payment for an order.\n\n**Prerequisites:**\n- Order must be in 'confirmed' status\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'credit_card'\n- `card_number` (string, required): Credit card number\n- `card_expiry` (string, required): MM/YY format\n- `card_cvv` (string, required): 3-digit CVV\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"Payment processed successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"payment_method\": \"credit_card\",\n    \"status\": \"successful\",\n    \"amount\": \"2719.94\",\n    \"transaction_id\": \"credit_card_abc123_1706624000\",\n    \"created_at\": \"2025-01-30T10:05:00.000000Z\"\n  }\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"Payment processing failed\",\n  \"error\": \"Cannot process payment for order with status: pending. Order must be confirmed first.\"\n}\n```"
+          },
+          "response": [
+            {
+              "name": "Success - Payment Processed",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"message\": \"Payment processed successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"payment_method\": \"credit_card\",\n    \"status\": \"successful\",\n    \"amount\": \"2719.94\",\n    \"transaction_id\": \"credit_card_abc123_1706624000\",\n    \"created_at\": \"2025-01-30T10:05:00.000000Z\",\n    \"updated_at\": \"2025-01-30T10:05:00.000000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error - Order Not Confirmed",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"message\": \"Payment processing failed\",\n  \"error\": \"Cannot process payment for order with status: pending. Order must be confirmed first.\"\n}"
+            },
+            {
+              "name": "Error - Validation Failed",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "body": "{\n  \"message\": \"Card number is required for credit card payments. (and 2 more errors)\",\n  \"errors\": {\n    \"card_number\": [\"Card number is required for credit card payments.\"],\n    \"card_expiry\": [\"Card expiry is required for credit card payments.\"],\n    \"card_cvv\": [\"CVV is required for credit card payments.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Process Payment - PayPal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_method\": \"paypal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "payments"]
+            },
+            "description": "Process PayPal payment for an order.\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'paypal'\n\n**Success Response (201):**\nSame structure as credit card payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Process Payment - Stripe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payment_method\": \"stripe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "payments"]
+            },
+            "description": "Process Stripe payment for an order.\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'stripe'\n\n**Success Response (201):**\nSame structure as credit card payment"
+          },
+          "response": []
+        },
+        {
+          "name": "List All Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/payments?per_page=15&status=successful",
+              "host": ["{{base_url}}"],
+              "path": ["payments"],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "status",
+                  "value": "successful",
+                  "description": "Filter by status: pending, successful, failed",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all payments for authenticated user's orders.\n\n**Query Parameters:**\n- `per_page` (integer, optional): Items per page\n- `status` (string, optional): Filter by status\n\n**Success Response (200):**\n```json\n{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"order_id\": 1,\n      \"payment_method\": \"credit_card\",\n      \"status\": \"successful\",\n      \"amount\": \"2719.94\",\n      \"transaction_id\": \"...\"\n    }\n  ]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/payments/{{payment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["payments", "{{payment_id}}"]
+            },
+            "description": "Get details of a specific payment.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"payment_method\": \"credit_card\",\n    \"status\": \"successful\",\n    \"amount\": \"2719.94\",\n    \"transaction_id\": \"credit_card_abc123_1706624000\",\n    \"created_at\": \"2025-01-30T10:05:00.000000Z\"\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "payments"]
+            },
+            "description": "Get all payments for a specific order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": [...]\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/payments/stats",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "{{order_id}}", "payments", "stats"]
+            },
+            "description": "Get payment statistics for an order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"total_payments\": 2,\n    \"successful_payments\": 1,\n    \"failed_payments\": 1,\n    \"pending_payments\": 0,\n    \"total_paid\": 2719.94,\n    \"total_pending\": 0\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Refund Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 100.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/{{payment_id}}/refund",
+              "host": ["{{base_url}}"],
+              "path": ["payments", "{{payment_id}}", "refund"]
+            },
+            "description": "Refund a payment (full or partial).\n\n**Request Body:**\n- `amount` (decimal, optional): Partial refund amount (omit for full refund)\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Refund processed successfully\",\n  \"data\": {\n    \"success\": true,\n    \"message\": \"Refund processed successfully\",\n    \"transaction_id\": \"...\"\n  }\n}\n```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. System",
+      "description": "System health and utility endpoints",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check API health status.\n\n**Success Response (200):**\n```json\n{\n  \"status\": \"ok\",\n  \"timestamp\": \"2025-01-30T10:00:00.000000Z\"\n}\n```"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
