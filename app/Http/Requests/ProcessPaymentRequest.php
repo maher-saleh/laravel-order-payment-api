@@ -79,9 +79,9 @@ class ProcessPaymentRequest extends FormRequest
         return [
             'payment_method.required' => 'Payment method is required',
             'payment_method.in' => 'Invalid payment method selected',
-            'card_number.required_if' => 'Card number is required for credit card payments',
-            'card_expiry.required_if' => 'Card expiry is required for credit card payments',
-            'card_cvv.required_if' => 'CVV is required for credit card payments',
+            'card_number.required' => 'Card number is required for credit card payments',
+            'card_expiry.required' => 'Card expiry is required for credit card payments',
+            'card_cvv.required' => 'CVV is required for credit card payments',
         ];
     }
 }
