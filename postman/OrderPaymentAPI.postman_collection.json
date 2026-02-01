@@ -85,8 +85,13 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Register a new user account.\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1Qi...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}\n```"
           },
@@ -148,8 +153,13 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             },
             "description": "Login with existing credentials.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Login successful\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  },\n  \"access_token\": \"eyJ0eXAiOiJKV1Qi...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The provided credentials are incorrect.\",\n  \"errors\": {\n    \"email\": [\"The provided credentials are incorrect.\"]\n  }\n}\n```"
           },
@@ -180,8 +190,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/auth/me",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
             },
             "description": "Get authenticated user information.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"email_verified_at\": null,\n    \"created_at\": \"2025-01-30T10:00:00.000000Z\"\n  }\n}\n```"
           },
@@ -199,8 +214,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/auth/refresh",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "refresh"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
             },
             "description": "Refresh JWT token before expiration.\n\n**Success Response (200):**\n```json\n{\n  \"access_token\": \"new_token_here\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}\n```"
           },
@@ -218,8 +238,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
             },
             "description": "Logout and invalidate current token.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Successfully logged out\"\n}\n```"
           },
@@ -270,8 +295,12 @@
             },
             "url": {
               "raw": "{{base_url}}/orders",
-              "host": ["{{base_url}}"],
-              "path": ["orders"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ]
             },
             "description": "Create a new order with items.\n\n**Request Body:**\n- `items` (array, required): Array of order items\n  - `product_name` (string, required, max:255)\n  - `quantity` (integer, required, min:1, max:1000)\n  - `price` (decimal, required, min:0.01, max:999999.99)\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"Order created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"status\": \"pending\",\n    \"total_amount\": \"2719.94\",\n    \"items_count\": 3,\n    \"payments_count\": 0,\n    \"created_at\": \"2025-01-30T10:00:00.000000Z\",\n    \"items\": [...]\n  }\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"The items field is required. (and 1 more error)\",\n  \"errors\": {\n    \"items\": [\"The items field is required.\"],\n    \"items.0.price\": [\"The price must be at least 0.01.\"]\n  }\n}\n```"
           },
@@ -302,8 +331,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders?per_page=15&status=pending",
-              "host": ["{{base_url}}"],
-              "path": ["orders"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ],
               "query": [
                 {
                   "key": "per_page",
@@ -334,8 +367,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}"
+              ]
             },
             "description": "Get detailed information about a specific order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"status\": \"pending\",\n    \"total_amount\": \"2719.94\",\n    \"items\": [...],\n    \"payments\": [...]\n  }\n}\n```\n\n**Error Response (403):**\n```json\n{\n  \"message\": \"This action is unauthorized.\"\n}\n```\n\n**Error Response (404):**\n```json\n{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}\n```"
           },
@@ -366,8 +404,13 @@
             },
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}"
+              ]
             },
             "description": "Update order status or items.\n\n**Request Body:**\n- `status` (string, optional): pending, confirmed, cancelled\n- `items` (array, optional): Updated items array\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order updated successfully\",\n  \"data\": {...}\n}\n```"
           },
@@ -385,8 +428,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/confirm",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "confirm"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "confirm"
+              ]
             },
             "description": "Confirm an order (required before payment).\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order confirmed successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"status\": \"confirmed\",\n    ...\n  }\n}\n```"
           },
@@ -404,8 +453,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/cancel",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "cancel"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "cancel"
+              ]
             },
             "description": "Cancel an order.\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order cancelled successfully\",\n  \"data\": {...}\n}\n```"
           },
@@ -423,8 +478,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}"
+              ]
             },
             "description": "Delete an order (only if no payments exist).\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Order deleted successfully\"\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"Cannot delete order with associated payments\"\n}\n```"
           },
@@ -466,7 +526,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4111111111111111\",\n  \"card_expiry\": \"12/25\",\n  \"card_cvv\": \"123\"\n}",
+              "raw": "{\n  \"payment_method\": \"credit_card\",\n  \"card_number\": \"4111111111111111\",\n  \"card_expiry\": \"02/26\",\n  \"card_cvv\": \"123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -475,8 +535,14 @@
             },
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/payments",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "payments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "payments"
+              ]
             },
             "description": "Process credit card payment for an order.\n\n**Prerequisites:**\n- Order must be in 'confirmed' status\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'credit_card'\n- `card_number` (string, required): Credit card number\n- `card_expiry` (string, required): MM/YY format\n- `card_cvv` (string, required): 3-digit CVV\n\n**Success Response (201):**\n```json\n{\n  \"message\": \"Payment processed successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"payment_method\": \"credit_card\",\n    \"status\": \"successful\",\n    \"amount\": \"2719.94\",\n    \"transaction_id\": \"credit_card_abc123_1706624000\",\n    \"created_at\": \"2025-01-30T10:05:00.000000Z\"\n  }\n}\n```\n\n**Error Response (422):**\n```json\n{\n  \"message\": \"Payment processing failed\",\n  \"error\": \"Cannot process payment for order with status: pending. Order must be confirmed first.\"\n}\n```"
           },
@@ -526,8 +592,14 @@
             },
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/payments",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "payments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "payments"
+              ]
             },
             "description": "Process PayPal payment for an order.\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'paypal'\n\n**Success Response (201):**\nSame structure as credit card payment"
           },
@@ -558,8 +630,14 @@
             },
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/payments",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "payments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "payments"
+              ]
             },
             "description": "Process Stripe payment for an order.\n\n**Request Body:**\n- `payment_method` (string, required): Must be 'stripe'\n\n**Success Response (201):**\nSame structure as credit card payment"
           },
@@ -577,8 +655,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/payments?per_page=15&status=successful",
-              "host": ["{{base_url}}"],
-              "path": ["payments"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments"
+              ],
               "query": [
                 {
                   "key": "per_page",
@@ -608,8 +690,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/payments/{{payment_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["payments", "{{payment_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "{{payment_id}}"
+              ]
             },
             "description": "Get details of a specific payment.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"payment_method\": \"credit_card\",\n    \"status\": \"successful\",\n    \"amount\": \"2719.94\",\n    \"transaction_id\": \"credit_card_abc123_1706624000\",\n    \"created_at\": \"2025-01-30T10:05:00.000000Z\"\n  }\n}\n```"
           },
@@ -627,8 +714,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/payments",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "payments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "payments"
+              ]
             },
             "description": "Get all payments for a specific order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": [...]\n}\n```"
           },
@@ -646,8 +739,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/orders/{{order_id}}/payments/stats",
-              "host": ["{{base_url}}"],
-              "path": ["orders", "{{order_id}}", "payments", "stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "payments",
+                "stats"
+              ]
             },
             "description": "Get payment statistics for an order.\n\n**Success Response (200):**\n```json\n{\n  \"data\": {\n    \"total_payments\": 2,\n    \"successful_payments\": 1,\n    \"failed_payments\": 1,\n    \"pending_payments\": 0,\n    \"total_paid\": 2719.94,\n    \"total_pending\": 0\n  }\n}\n```"
           },
@@ -678,8 +778,14 @@
             },
             "url": {
               "raw": "{{base_url}}/payments/{{payment_id}}/refund",
-              "host": ["{{base_url}}"],
-              "path": ["payments", "{{payment_id}}", "refund"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "{{payment_id}}",
+                "refund"
+              ]
             },
             "description": "Refund a payment (full or partial).\n\n**Request Body:**\n- `amount` (decimal, optional): Partial refund amount (omit for full refund)\n\n**Success Response (200):**\n```json\n{\n  \"message\": \"Refund processed successfully\",\n  \"data\": {\n    \"success\": true,\n    \"message\": \"Refund processed successfully\",\n    \"transaction_id\": \"...\"\n  }\n}\n```"
           },
@@ -706,8 +812,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/health",
-              "host": ["{{base_url}}"],
-              "path": ["health"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
             },
             "description": "Check API health status.\n\n**Success Response (200):**\n```json\n{\n  \"status\": \"ok\",\n  \"timestamp\": \"2025-01-30T10:00:00.000000Z\"\n}\n```"
           },
