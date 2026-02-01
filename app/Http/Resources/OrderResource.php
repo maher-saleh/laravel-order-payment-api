@@ -33,7 +33,7 @@ class OrderResource extends JsonResource
             'items_count' => $this->items->count(),
             'payments_count' => $this->payments->count(),
             'created_at' => $this->created_at?->toIso8601String(),
-            'updated_at' => $this->update_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
 
             // Conditional relationships
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
