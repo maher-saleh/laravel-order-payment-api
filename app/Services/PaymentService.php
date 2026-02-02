@@ -125,7 +125,7 @@ class PaymentService
      * Refund a payment.
      * 
      * @param Payment $payment
-     * @param float|null $amount Prtial refund amunt
+     * @param float|null $amount Partial refund amunt
      * @return PaymentResultDTO
      */
     public function refundPayment(Payment $payment, ?float $amount = null): PaymentResultDTO
